@@ -1,0 +1,40 @@
+body {
+	background-image: url("../images/Wiki-background.jpg");
+}
+
+.navbar {
+   background-color: transparent;
+   background: transparent;
+   border-color: transparent;
+}
+
+.btn-info {
+	margin-top: 25px;
+}
+
+.ninjaStylingHeading {
+	color: white;
+	font-family: 'Shadows Into Light', cursive;
+	font-size: 40px;
+	font-weight: bolder;
+	letter-spacing: 3px;
+}
+
+.ninjaStylingBody {
+	font-family: 'Roboto Slab', serif;
+	font-size: 28px;
+	color: white;
+}
+
+.center {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.ninjaImage {
+	width: 200px;
+}
+
+.weaponImage {
+	width: 100px;
+}
