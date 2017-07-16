@@ -13,16 +13,11 @@ $(document).ready(function(){
 
 		//function to deduct HPs when attacked
 		this.getAttacked = function(cP){
-			this.healthPoints =- cP;
-		};
-
-		//function to determine if character is defeated
-		this.isDefeated = function(){
-			if (this.healthPoints < 0){
+			this.healthPoints = this.healthPoints - cP;
+			if(this.healthPoints <= 0){
 				this.defeated = true;
 			}
-			return(this.defeated);
-		}
+		};
 	};
 
 
@@ -56,25 +51,44 @@ $(document).ready(function(){
 		return(newImg);
 	}
 
-	var attack = function(attacker, opponent){
-		opponent.getAttacked(user.counterAttackPower);
-		if (opponent.defeated){
-			winMatch();
-		}
-		else{
-			attacker.counterAttackPower += attacker.attackPower;
-			$("#message").html("You have attacked with " + user.counterAttackPower + "attack power.  Get ready for the counter attack.")
-		}
+	var attack = function(){
+		var attacker = ninjas.userChar;
+		var opposition = ninjas.opponent;
+		var throwingStar = "<img src='assets/images/throwingStar.png' class='weaponImage' id='star'>";
+		var setupArea = $("#setup");
+		setupArea.html(throwingStar);
+		$("#star").animate({ left: "+=500px" }, "slow", function(){
+			ninjas[opposition].getAttacked(ninjas[attacker].counterAttackPower);
+			if (ninjas[opposition].defeated){
+//			winMatch();
+				$("#message").html("You won the match.  You have attacked with " + ninjas[attacker].counterAttackPower + " attack power.")
+			}
+			else{
+				ninjas[attacker].counterAttackPower += ninjas[attacker].attackPower;
+				$("#message").html("You have attacked with " + ninjas[attacker].counterAttackPower + " attack power.");
+				counterAttack();
+			}
+		});
 	};
 
-	var counterAttack = function(user, opponent){
-		user.getAttacked(opponent.counterAttackPower);
-		if (user.defeated){
-			loseGame();
-		}
-		else{
-			$("#message").append("Your opponent has attacked with " + opponent.counterAttackPower + "attack power.  Please attack again when ready.")
-		}
+	var counterAttack = function(){
+		var attacker = ninjas.userChar;
+		var opposition = ninjas.opponent;
+		var bomb = "<img src='assets/images/bomb4.png' class='weaponImage' id='bomb'>";
+		var setupArea = $("#setup");
+		setupArea.append(bomb);
+		$("#bomb").offset({ left: 850 });
+		$("#bomb").animate({ left: "-=450px" }, "slow", function(){
+			ninjas[attacker].getAttacked(ninjas[opposition].counterAttackPower);
+			if (ninjas[attacker].defeated){
+//			loseGame();
+				$("#message").html("You lost!")
+			}
+			else{
+				$("#message").append(" Your opponent has attacked with " + ninjas[opposition].counterAttackPower + " attack power.  Please attack again when ready.")
+			}
+			$(".weaponImage").remove();
+		});
 	};
 
 	//Moves user's selected character to the fight section and sets up selection of opponents
@@ -147,6 +161,10 @@ $(document).ready(function(){
 		}
 	});
 	
-	
+	$(attackBtn).click(function(){
+		attack();			
+	});
+
+
 
 });
