@@ -32,18 +32,40 @@ body {
 }
 
 .ninjaImage {
-	width: 150px;
-	height: 150px;
-	margin: 2%;
+	width: 120px;
+	height: 120px;
+	margin: 15px;
+}
+
+.ninjaDiv {
+	overflow: auto;
+	text-align: center;
+	width: 160px;
 }
 
 .opponentImage{
-	width: 150px;
-	height: 150px;
+	width: 120px;
+	height: 120px;
 	margin-left: 50%;
 }
 
 .weaponImage {
 	width: 100px;
 	position: absolute;
+}
+
+.user {
+	background-color: blue;
+	border: 1px solid black;
+	font-family: 'Roboto Slab', serif;
+	font-size: 12px;
+	color: white;
+}
+
+.opponentDiv {
+	margin-left: 55%;
+	background-color: red;
+		font-family: 'Roboto Slab', serif;
+	font-size: 12px;
+	color: white;
 }
