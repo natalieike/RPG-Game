@@ -26,10 +26,10 @@ $(document).ready(function(){
 		var setup = $("#setup"); //space where images will be displayed
 		//set up ninjas object with initialized characters
 		ninjas = {
-			steve: new character(5, 160, "assets/images/angryNinja.jpeg"),
-			tiffany: new character(20, 100, "assets/images/girlNinja2.png"),
-			kenny: new character(15, 120, "assets/images/happyNinja2.jpg"),
-			bobby: new character(10, 140, "assets/images/doubleSwordNinja.png"),
+			steve: new character(18, 100, "assets/images/angryNinja.jpeg"),
+			tiffany: new character(40, 60, "assets/images/girlNinja2.png"),
+			kenny: new character(32, 80, "assets/images/happyNinja2.jpg"),
+			bobby: new character(26, 90, "assets/images/doubleSwordNinja.png"),
 			userChar: "",
 			opponent: ""
 		};
@@ -43,14 +43,16 @@ $(document).ready(function(){
 		};
 	};
 
+	//Returns an individual Ninja image HTML
 	var buildNinjaImg = function(imageFilename, idName){
 		var newImg = $("<img>");
 		newImg.attr("src", imageFilename);
 		newImg.attr("class", "ninjaImage");
 		newImg.attr("data-char", idName);
 		return(newImg);
-	}
+	};
 
+	//Attack Sequence:  throw star, call getAttacked method, increase CP, and call counter attack if not a winner
 	var attack = function(){
 		var attacker = ninjas.userChar;
 		var opposition = ninjas.opponent;
@@ -60,17 +62,18 @@ $(document).ready(function(){
 		$("#star").animate({ left: "+=500px" }, "slow", function(){
 			ninjas[opposition].getAttacked(ninjas[attacker].counterAttackPower);
 			if (ninjas[opposition].defeated){
-//			winMatch();
 				$("#message").html("You won the match.  You have attacked with " + ninjas[attacker].counterAttackPower + " attack power.")
+				winMatch();
 			}
 			else{
-				ninjas[attacker].counterAttackPower += ninjas[attacker].attackPower;
 				$("#message").html("You have attacked with " + ninjas[attacker].counterAttackPower + " attack power.");
 				counterAttack();
 			}
+			ninjas[attacker].counterAttackPower += ninjas[attacker].attackPower;
 		});
 	};
 
+	//Counter Attack sequence:  throw bomb, call getAttacked method
 	var counterAttack = function(){
 		var attacker = ninjas.userChar;
 		var opposition = ninjas.opponent;
@@ -81,11 +84,11 @@ $(document).ready(function(){
 		$("#bomb").animate({ left: "-=450px" }, "slow", function(){
 			ninjas[attacker].getAttacked(ninjas[opposition].counterAttackPower);
 			if (ninjas[attacker].defeated){
-//			loseGame();
 				$("#message").html("You lost!")
+				loseGame();
 			}
 			else{
-				$("#message").append(" Your opponent has attacked with " + ninjas[opposition].counterAttackPower + " attack power.  Please attack again when ready.")
+				$("#message").append(" Your opponent has attacked with " + ninjas[opposition].counterAttackPower + " attack power. Your Health Points are " + ninjas[attacker].healthPoints + ". Please attack again when ready.")
 			}
 			$(".weaponImage").remove();
 		});
@@ -101,6 +104,7 @@ $(document).ready(function(){
 		rebuildWaitingArea();
 	};
 
+	//Re-builds the waiting area after an opponent is selected
 	var rebuildWaitingArea = function(){
 		var waitingArea = $("#waiting");
 		waitingArea.empty();
@@ -113,25 +117,53 @@ $(document).ready(function(){
 					waitingArea.append(newImg);
 			};
 		};
-	}
+	};
 
+	//Move the opponent to the fight area
 	var moveOpponentChar = function(userSelect){
 		var fightArea = $("#fight");
+		var messageArea = $("#message");
 		var newImg = buildNinjaImg(ninjas[userSelect].picture, userSelect);
 		newImg.attr("class", "opponentImage");
 		fightArea.append(newImg);
 		rebuildWaitingArea();
-	}
+		messageArea.html("");
+	};
 
+	var moveLoser = function(loser){
+		var fightArea = $("#fight");
+		var defeatedArea = $("#defeated");
+		var messageArea = $("#message");
+		var waitingArea = $("#waiting");
+		var newImg = buildNinjaImg(ninjas[loser].picture, loser);
+		newImg.attr("class", "ninjaImage");
+		defeatedArea.append(newImg);
+		$(".opponentImage").remove();
+		$(".weaponImage").remove();
+		rebuildWaitingArea();
+		if(waitingArea.html() == ""){
+			messageArea.html("You Won!");
+			startBtn.show();
+			$(".ninjaImage").remove();
+		}
+		else {
+			messageArea.html("Please choose your next opponent");
+		}
+	};
+
+	//Win Match sequence:  hid attack button, get new oponent or win the game
 	var winMatch = function(){
 		attackBtn.hide();
-		moveLoser(ninjas[ninjas.opponent].picture);
+		moveLoser(ninjas.opponent);
 		ninjas.opponent = "";
 	};
 
 	var loseGame = function(){
 		attackBtn.hide();
 		startBtn.show();	
+		$(".ninjaImage").remove();
+		$(".opponentImage").remove();
+		$(".weaponImage").remove();
 	};
 
 	//Hide Attack button until ready to attack
@@ -140,6 +172,7 @@ $(document).ready(function(){
 	//Click Start Button to initialize game.  Hide button once character options are exposed.
 	startBtn.click(function(){
 		initializeGame();
+		$("#message").html("");
 		startBtn.hide();
 	});
 
