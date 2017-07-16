@@ -37,6 +37,12 @@ body {
 	margin: 2%;
 }
 
+.opponentImage{
+	width: 150px;
+	height: 150px;
+	margin-left: 50%;
+}
+
 .weaponImage {
 	width: 100px;
 }
