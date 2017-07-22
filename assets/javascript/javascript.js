@@ -216,9 +216,15 @@ $(document).ready(function(){
 			moveUserChar(selection);
 		}
 		else if (ninjas.opponent === ""){
-			ninjas.opponent = selection;
-			moveOpponentChar(selection);
-			attackBtn.show();
+			if(selection == ninjas.userChar){
+				$("#message").html("You can't play yourself. Please choose again.");
+			}
+			else{
+				ninjas.opponent = selection;
+				moveOpponentChar(selection);
+				attackBtn.show();	
+				$("#message").empty();			
+			}
 		}
 		else{
 			return;
